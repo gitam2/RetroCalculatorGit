@@ -6,12 +6,12 @@
 //  Copyright © 2017 Cannon Creations. All rights reserved.
 //
 
+// below is Mark's version of code
+
 import UIKit
 import AVFoundation
 
 class ViewController: UIViewController {
-    
-    
     @IBOutlet weak var outputLbl: UILabel!
     
     var btnSound: AVAudioPlayer!
@@ -19,8 +19,8 @@ class ViewController: UIViewController {
     enum Operation: String {
         case Divide = "/"
         case Multiply = "*"
-        case Add = "+"
         case Subtract = "-"
+        case Add = "+"
         case Empty = "Empty"
     }
     
@@ -30,10 +30,8 @@ class ViewController: UIViewController {
     var rightValStr = ""
     var result = ""
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
         let path = Bundle.main.path(forResource: "btn", ofType: "wav")
         let soundURL = URL(fileURLWithPath: path!)
@@ -41,22 +39,19 @@ class ViewController: UIViewController {
         do {
             try btnSound = AVAudioPlayer(contentsOf: soundURL)
             btnSound.prepareToPlay()
-            
         } catch let err as NSError {
             print(err.debugDescription)
         }
         
         outputLbl.text = "0"
         
-        
     }
-
+    
     @IBAction func numberPressed(sender: UIButton) {
         playSound()
         
         runningNumber += "\(sender.tag)"
         outputLbl.text = runningNumber
-        
     }
     
     @IBAction func onDividePressed(sender: AnyObject) {
@@ -67,18 +62,17 @@ class ViewController: UIViewController {
         processOperation(operation: .Multiply)
     }
     
-    @IBAction func onAddPressed(sender: AnyObject) {
-        processOperation(operation: .Add)
-    }
-    
     @IBAction func onSubtractPressed(sender: AnyObject) {
         processOperation(operation: .Subtract)
+    }
+    
+    @IBAction func onAddPressed(sender: AnyObject) {
+        processOperation(operation: .Add)
     }
     
     @IBAction func onEqualPressed(sender: AnyObject) {
         processOperation(operation: currentOperation)
     }
-   
     
     func playSound() {
         if btnSound.isPlaying {
@@ -91,18 +85,19 @@ class ViewController: UIViewController {
     func processOperation(operation: Operation) {
         playSound()
         if currentOperation != Operation.Empty {
+            //A user selected an operator, but then selected another operator without first entering a number
             if runningNumber != "" {
                 rightValStr = runningNumber
                 runningNumber = ""
                 
-                if currentOperation == Operation.Divide {
-                    result = "\(Double(leftValStr)! / Double(rightValStr)!)"
-                } else if currentOperation == Operation.Multiply {
+                if currentOperation == Operation.Multiply {
                     result = "\(Double(leftValStr)! * Double(rightValStr)!)"
-                } else if currentOperation ==  Operation.Add {
-                    result = "\(Double(leftValStr)! + Double(rightValStr)!)"
-                } else if currentOperation ==  Operation.Subtract {
+                } else if currentOperation == Operation.Divide {
+                    result = "\(Double(leftValStr)! / Double(rightValStr)!)"
+                } else if currentOperation == Operation.Subtract {
                     result = "\(Double(leftValStr)! - Double(rightValStr)!)"
+                } else if currentOperation == Operation.Add {
+                    result = "\(Double(leftValStr)! + Double(rightValStr)!)"
                 }
                 
                 leftValStr = result
@@ -111,12 +106,13 @@ class ViewController: UIViewController {
             
             currentOperation = operation
         } else {
-            // This is the first time an operator has been pressed
+            //This is the first time an operator has been pressed
             leftValStr = runningNumber
             runningNumber = ""
             currentOperation = operation
         }
-      }
+    }
     
     
 }
+
